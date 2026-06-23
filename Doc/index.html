@@ -3,251 +3,202 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>VR Base Package — 설치 & 데모 실행 강의</title>
+<title>VR Base Package — 설치 &amp; 데모 실행 강의</title>
 <style>
-  :root{
-    --bg:#0f1216; --panel:#161b22; --panel2:#1c232c; --line:#2b3440;
-    --txt:#e6edf3; --muted:#9aa7b4; --accent:#4ea1ff; --accent2:#7ee787;
-    --warn:#ffb84d; --danger:#ff6b6b; --code:#0b0e12;
+  body {
+    font-family: "Malgun Gothic", "Segoe UI", Arial, sans-serif;
+    color: #222;
+    background: #ffffff;
+    line-height: 1.7;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+    font-size: 16px;
   }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{
-    margin:0; background:var(--bg); color:var(--txt);
-    font-family:"Pretendard","Segoe UI",-apple-system,BlinkMacSystemFont,"Malgun Gothic",sans-serif;
-    line-height:1.7; font-size:16px;
+  h1 { font-size: 28px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+  h2 {
+    font-size: 22px; margin-top: 40px;
+    border-bottom: 1px solid #ccc; padding-bottom: 6px;
   }
-  .wrap{max-width:1000px; margin:0 auto; padding:0 20px 80px}
-  header.hero{
-    background:linear-gradient(135deg,#1b2735 0%,#0f1216 70%);
-    border-bottom:1px solid var(--line); padding:48px 20px; text-align:center;
+  h3 { font-size: 18px; margin-top: 24px; }
+  p { margin: 10px 0; }
+  a { color: #1a6dcc; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 5px 0; }
+  code {
+    background: #f4f4f4; border: 1px solid #ddd; border-radius: 3px;
+    padding: 1px 5px; font-family: Consolas, "Courier New", monospace; font-size: 90%;
   }
-  header.hero h1{margin:0 0 8px; font-size:32px; letter-spacing:-.5px}
-  header.hero p{margin:0; color:var(--muted)}
-  .badge{display:inline-block; margin-top:14px; padding:4px 12px; border:1px solid var(--line);
-    border-radius:999px; font-size:13px; color:var(--accent); background:#11161c}
-  h2{margin:48px 0 14px; font-size:24px; padding-bottom:8px; border-bottom:2px solid var(--line)}
-  h2 .num{display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px;
-    background:var(--accent); color:#06223f; border-radius:9px; font-size:17px; margin-right:10px; vertical-align:middle; font-weight:700}
-  h3{margin:26px 0 8px; font-size:18px; color:#cfe3ff}
-  p{margin:10px 0}
-  a{color:var(--accent); text-decoration:none}
-  a:hover{text-decoration:underline}
-  code{background:var(--code); border:1px solid var(--line); border-radius:5px; padding:1px 6px; font-size:90%;
-    font-family:"JetBrains Mono","Consolas",monospace; color:#ffd9a0}
-  pre{background:var(--code); border:1px solid var(--line); border-radius:10px; padding:14px 16px; overflow:auto;
-    font-family:"JetBrains Mono","Consolas",monospace; font-size:13.5px; color:#d6dee6}
-  pre code{background:none; border:none; padding:0; color:inherit}
-  .toc{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 22px; margin:30px 0}
-  .toc h4{margin:0 0 10px; color:var(--muted); font-size:13px; letter-spacing:1px; text-transform:uppercase}
-  .toc ol{margin:0; padding-left:22px}
-  .toc li{margin:5px 0}
-  .step{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:6px 22px 16px; margin:16px 0}
-  ul,ol{padding-left:22px}
-  li{margin:6px 0}
-  .note,.warn,.danger,.tip{border-radius:10px; padding:12px 16px; margin:14px 0; border:1px solid; font-size:15px}
-  .note{background:#10202e; border-color:#1d4a6b}
-  .tip{background:#11281b; border-color:#2c6b3f}
-  .warn{background:#2a2412; border-color:#6b5421}
-  .danger{background:#2a1414; border-color:#6b2a2a}
-  .note b,.tip b,.warn b,.danger b{display:block; margin-bottom:3px}
-  .note b{color:var(--accent)} .tip b{color:var(--accent2)} .warn b{color:var(--warn)} .danger b{color:var(--danger)}
-  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:14.5px}
-  th,td{border:1px solid var(--line); padding:9px 12px; text-align:left}
-  th{background:var(--panel2); color:#cfe3ff}
-  td code{font-size:88%}
-  .chk{color:var(--accent2); font-weight:700}
-  .path{color:var(--warn)}
-  footer{margin-top:60px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; text-align:center}
-  .kbd{background:var(--panel2); border:1px solid var(--line); border-bottom-width:2px; border-radius:5px; padding:1px 7px; font-size:13px}
-  .lead{color:var(--muted); font-size:15px}
+  pre {
+    background: #f4f4f4; border: 1px solid #ddd; border-radius: 4px;
+    padding: 12px 14px; overflow: auto;
+    font-family: Consolas, "Courier New", monospace; font-size: 14px;
+  }
+  pre code { background: none; border: none; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 15px; }
+  th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+  th { background: #f0f0f0; }
+  .box {
+    border: 1px solid #ccc; border-left: 4px solid #888;
+    background: #fafafa; padding: 10px 14px; margin: 14px 0;
+  }
+  .note { border-left-color: #1a6dcc; }
+  .tip { border-left-color: #2e9e3f; }
+  .warn { border-left-color: #d39e00; }
+  .danger { border-left-color: #cc3333; }
+  .box strong { display: block; margin-bottom: 3px; }
+  footer { margin-top: 50px; padding-top: 16px; border-top: 1px solid #ccc; color: #777; font-size: 13px; }
 </style>
 </head>
 <body>
 
-<header class="hero">
-  <h1>VR Base Package 강의 문서</h1>
-  <p>처음 프로젝트 열기 → 안드로이드(Quest) 전환 → 설치/설정 → 데모에서 박스 잡기</p>
-  <div class="badge">Unity 6 (6000.4.8f1) · OpenXR · URP · 핸드포즈 그립</div>
-</header>
+<h1>VR Base Package 강의 문서</h1>
+<p>처음 프로젝트 열기 → 안드로이드(Quest) 전환 → 설치/설정 → 데모에서 박스 잡기<br>
+<small>Unity 6 (6000.4.8f1) · OpenXR · URP · 핸드포즈 그립</small></p>
 
-<div class="wrap">
+<p>이 문서는 빈 Unity 프로젝트에서 <code>vr-base-package</code>를 설치하고, 안드로이드(Meta Quest) 플랫폼으로 전환해 데모 씬에서 <strong>왼쪽 컨트롤러로 박스를 잡는 것</strong>까지 따라 하는 강의용 가이드입니다. 순서대로 진행하세요.</p>
 
-  <p class="lead">이 문서는 빈 Unity 프로젝트에서 <code>vr-base-package</code>를 설치하고, 안드로이드(Meta Quest) 플랫폼으로 전환해 데모 씬에서 <b>왼쪽 컨트롤러로 박스를 잡는 것</b>까지 따라 하는 강의용 가이드입니다. 순서대로 진행하세요.</p>
+<h2>목차</h2>
+<ol>
+  <li><a href="#s0">사전 준비물</a></li>
+  <li><a href="#s1">프로젝트 처음 열기</a></li>
+  <li><a href="#s2">플랫폼을 Android로 변경</a></li>
+  <li><a href="#s3">패키지 추가 (Git URL)</a></li>
+  <li><a href="#s4">필수 패키지 확인</a></li>
+  <li><a href="#s5">필수 샘플 임포트</a></li>
+  <li><a href="#s6">프로젝트 설정 (XR / OpenXR / URP / Input)</a></li>
+  <li><a href="#s7">Project Validation (자동 점검·수정)</a></li>
+  <li><a href="#s8">데모 실행 — 왼쪽 컨트롤러로 박스 잡기</a></li>
+  <li><a href="#s9">문제 해결</a></li>
+</ol>
 
-  <div class="toc">
-    <h4>목차</h4>
-    <ol>
-      <li><a href="#s0">사전 준비물</a></li>
-      <li><a href="#s1">프로젝트 처음 열기</a></li>
-      <li><a href="#s2">플랫폼을 Android로 변경</a></li>
-      <li><a href="#s3">패키지 추가 (Git URL)</a></li>
-      <li><a href="#s4">필수 패키지 확인</a></li>
-      <li><a href="#s5">필수 샘플 임포트</a></li>
-      <li><a href="#s6">프로젝트 설정 (XR / OpenXR / URP / Input)</a></li>
-      <li><a href="#s7">Project Validation (자동 점검·수정)</a></li>
-      <li><a href="#s8">데모 실행 — 왼쪽 컨트롤러로 박스 잡기</a></li>
-      <li><a href="#s9">문제 해결</a></li>
-    </ol>
-  </div>
+<h2 id="s0">0. 사전 준비물</h2>
+<ul>
+  <li><strong>Unity 6</strong> (권장 <code>6000.4.8f1</code>) — Unity Hub 설치 시 <strong>Android Build Support</strong>(OpenJDK, Android SDK &amp; NDK 포함) 모듈 체크</li>
+  <li><strong>Meta Quest</strong> 기기 (Quest 2/3/Pro) + USB 케이블(Quest Link) 또는 무선(Air Link)</li>
+  <li>PC 미리보기용 <strong>Meta Quest Link</strong> 앱</li>
+</ul>
+<div class="box tip"><strong>핵심</strong>핸드트래킹 포즈는 실제 기기(Quest/Link)에서만 정확히 동작합니다. 에디터 단독 재생으로는 손 추적이 보이지 않습니다.</div>
 
-  <!-- 0 -->
-  <h2 id="s0"><span class="num">0</span>사전 준비물</h2>
-  <div class="step">
-    <ul>
-      <li><b>Unity 6</b> (권장 <code>6000.4.8f1</code>) — Unity Hub에서 설치 시 <b>Android Build Support</b>(OpenJDK, Android SDK &amp; NDK 포함) 모듈 체크</li>
-      <li><b>Meta Quest</b> 기기 (Quest 2/3/Pro) + USB 케이블(Quest Link) 또는 무선(Air Link)</li>
-      <li>PC에서 미리보기하려면 <b>Meta Quest Link</b> 앱</li>
-    </ul>
-    <div class="tip"><b>핵심</b>핸드트래킹 포즈는 <b>실제 기기(Quest/Link)</b>에서만 정확히 동작합니다. 에디터 단독 재생으로는 손 추적이 보이지 않습니다.</div>
-  </div>
+<h2 id="s1">1. 프로젝트 처음 열기</h2>
+<ol>
+  <li><strong>Unity Hub ▸ New project</strong> → 템플릿 <strong>Universal 3D (URP)</strong> 선택 → 생성<br>
+    (이미 받은 프로젝트가 있으면 <strong>Open</strong> 으로 해당 폴더를 엽니다.)</li>
+  <li>에디터가 열리면 <strong>Project</strong>/<strong>Hierarchy</strong> 창이 보이는지 확인합니다.</li>
+</ol>
+<div class="box note"><strong>참고</strong>URP 템플릿으로 시작하면 렌더 파이프라인(URP)이 자동 지정되어 6단계의 URP 설정을 건너뛸 수 있습니다.</div>
 
-  <!-- 1 -->
-  <h2 id="s1"><span class="num">1</span>프로젝트 처음 열기</h2>
-  <div class="step">
-    <ol>
-      <li><b>Unity Hub ▸ New project</b> → 템플릿 <b>Universal 3D (URP)</b> 선택 → 프로젝트 생성<br>
-        <span class="lead">(이미 받은 프로젝트가 있으면 <b>Open</b> 으로 해당 폴더를 열면 됩니다.)</span></li>
-      <li>에디터가 열리면 메뉴 표시줄과 <b>Project</b>/<b>Hierarchy</b> 창이 보이는지 확인합니다.</li>
-    </ol>
-    <div class="note"><b>참고</b>URP 템플릿으로 시작하면 렌더 파이프라인(URP)이 자동 지정되어 6단계의 URP 설정을 건너뛸 수 있습니다.</div>
-  </div>
+<h2 id="s2">2. 플랫폼을 Android로 변경</h2>
+<p>Quest는 안드로이드 기반입니다. 가장 먼저 빌드 타깃을 <strong>Android</strong>로 바꿔야 이후 설정(OpenXR Android 탭 등)이 올바르게 적용됩니다.</p>
+<ol>
+  <li>메뉴 <strong>File ▸ Build Profiles</strong> 열기 (Unity 6 기준. 구버전은 <strong>Build Settings</strong>)</li>
+  <li>플랫폼 목록에서 <strong>Android</strong> 선택</li>
+  <li><strong>Switch Platform</strong> 클릭 → 에셋 재임포트가 끝날 때까지 대기</li>
+  <li>전환되면 Android 옆에 활성 표시(Unity 아이콘)가 붙습니다.</li>
+</ol>
+<div class="box warn"><strong>시간이 걸립니다</strong>최초 플랫폼 전환은 모든 에셋을 다시 임포트하므로 수 분 걸릴 수 있습니다. 멈춘 게 아니니 기다리세요.</div>
 
-  <!-- 2 -->
-  <h2 id="s2"><span class="num">2</span>플랫폼을 Android로 변경</h2>
-  <div class="step">
-    <p>Quest는 안드로이드 기반입니다. 가장 먼저 빌드 타깃을 <b>Android</b>로 바꿔야 이후 설정(OpenXR Android 탭 등)이 올바르게 적용됩니다.</p>
-    <ol>
-      <li>메뉴 <b>File ▸ Build Profiles</b> 열기 <span class="lead">(Unity 6 기준. 구버전은 <b>Build Settings</b>)</span></li>
-      <li>플랫폼 목록에서 <b>Android</b> 선택</li>
-      <li><b>Switch Platform</b> 클릭 → 에셋 재임포트가 끝날 때까지 대기</li>
-      <li>전환되면 Android 옆에 <b>Unity 아이콘(활성 표시)</b>이 붙습니다.</li>
-    </ol>
-    <div class="warn"><b>시간이 걸립니다</b>최초 플랫폼 전환은 모든 텍스처/에셋을 다시 임포트하므로 수 분이 걸릴 수 있습니다. 멈춘 게 아니니 기다리세요.</div>
-  </div>
+<h2 id="s3">3. 패키지 추가 (Git URL)</h2>
+<ol>
+  <li>메뉴 <strong>Window ▸ Package Manager</strong></li>
+  <li>좌측 상단 <strong>+ ▸ Add package from git URL...</strong></li>
+  <li>아래 주소 입력 후 <strong>Add</strong>:
+    <pre><code>https://github.com/smilejsu82/vr-base-package.git</code></pre>
+  </li>
+</ol>
+<div class="box tip"><strong>버전 고정</strong>특정 버전을 쓰려면 URL 뒤에 태그를 붙입니다: <code>...vr-base-package.git#v1.0.0</code></div>
+<div class="box note"><strong>자동 설치</strong>이 패키지는 완전 독립 패키지라 핸드포즈 스크립트·셰이더·도구가 모두 들어 있습니다. 추가하면 아래 XR 의존성도 자동 설치됩니다.</div>
 
-  <!-- 3 -->
-  <h2 id="s3"><span class="num">3</span>패키지 추가 (Git URL)</h2>
-  <div class="step">
-    <ol>
-      <li>메뉴 <b>Window ▸ Package Manager</b></li>
-      <li>좌측 상단 <b><span class="kbd">+</span> ▸ Add package from git URL...</b></li>
-      <li>아래 주소 입력 후 <b>Add</b>:
-        <pre><code>https://github.com/smilejsu82/vr-base-package.git</code></pre>
-      </li>
-    </ol>
-    <div class="tip"><b>버전 고정</b>특정 버전을 쓰려면 URL 뒤에 태그를 붙입니다: <code>...vr-base-package.git#v1.0.0</code></div>
-    <div class="note"><b>자동 설치</b>이 패키지는 <b>완전 독립 패키지</b>라 핸드포즈 스크립트·셰이더·도구가 모두 들어 있습니다. 추가하면 아래 XR 의존성도 자동으로 설치됩니다.</div>
-  </div>
+<h2 id="s4">4. 필수 패키지 확인</h2>
+<p>3단계에서 자동 설치됩니다. 자동 설치가 안 되면 <strong>Package Manager ▸ + ▸ Add package by name...</strong> 로 식별자/버전을 직접 입력하세요.</p>
+<table>
+  <tr><th>패키지</th><th>버전</th><th>식별자</th></tr>
+  <tr><td>OpenXR Plugin</td><td><strong>1.16.1</strong></td><td><code>com.unity.xr.openxr</code></td></tr>
+  <tr><td>XR Hands</td><td><strong>1.7.3</strong></td><td><code>com.unity.xr.hands</code></td></tr>
+  <tr><td>XR Interaction Toolkit</td><td><strong>3.4.1</strong></td><td><code>com.unity.xr.interaction.toolkit</code></td></tr>
+  <tr><td>XR Plugin Management</td><td><strong>4.6.0</strong></td><td><code>com.unity.xr.management</code></td></tr>
+  <tr><td>Input System</td><td>1.19.0</td><td><code>com.unity.inputsystem</code></td></tr>
+  <tr><td>Universal RP (URP)</td><td>17.4.0</td><td><code>com.unity.render-pipelines.universal</code></td></tr>
+</table>
 
-  <!-- 4 -->
-  <h2 id="s4"><span class="num">4</span>필수 패키지 확인</h2>
-  <div class="step">
-    <p>3단계에서 자동 설치됩니다. 자동 설치가 안 되면 <b>Package Manager ▸ <span class="kbd">+</span> ▸ Add package by name...</b> 로 식별자/버전을 직접 입력하세요.</p>
-    <table>
-      <tr><th>패키지</th><th>버전</th><th>식별자</th></tr>
-      <tr><td>OpenXR Plugin</td><td><b>1.16.1</b></td><td><code>com.unity.xr.openxr</code></td></tr>
-      <tr><td>XR Hands</td><td><b>1.7.3</b></td><td><code>com.unity.xr.hands</code></td></tr>
-      <tr><td>XR Interaction Toolkit</td><td><b>3.4.1</b></td><td><code>com.unity.xr.interaction.toolkit</code></td></tr>
-      <tr><td>XR Plugin Management</td><td><b>4.6.0</b></td><td><code>com.unity.xr.management</code></td></tr>
-      <tr><td>Input System</td><td>1.19.0</td><td><code>com.unity.inputsystem</code></td></tr>
-      <tr><td>Universal RP (URP)</td><td>17.4.0</td><td><code>com.unity.render-pipelines.universal</code></td></tr>
-    </table>
-  </div>
-
-  <!-- 5 -->
-  <h2 id="s5"><span class="num">5</span>필수 샘플 임포트</h2>
-  <div class="step">
-    <p>데모 씬의 <b>XR 리그·손 모델</b>은 아래 두 패키지의 <b>샘플</b>을 사용합니다(라이선스/용량상 패키지에 미포함). <b>Window ▸ Package Manager</b> 에서 각 패키지를 선택 → <b>Samples</b> 탭 ▸ <b>Import</b>.</p>
-    <table>
-      <tr><th>패키지</th><th>임포트할 샘플</th></tr>
-      <tr><td>XR Hands (<code>com.unity.xr.hands</code>)</td><td><b>HandVisualizer</b></td></tr>
-      <tr><td>XR Interaction Toolkit (<code>com.unity.xr.interaction.toolkit</code>)</td><td><b>Starter Assets</b></td></tr>
-    </table>
-    <p>임포트하면 다음 위치에 들어옵니다:</p>
-    <pre><code>Assets/Samples/XR Hands/1.7.3/HandVisualizer
+<h2 id="s5">5. 필수 샘플 임포트</h2>
+<p>데모 씬의 <strong>XR 리그·손 모델</strong>은 아래 두 패키지의 <strong>샘플</strong>을 사용합니다(라이선스/용량상 패키지 미포함). <strong>Window ▸ Package Manager</strong> 에서 각 패키지를 선택 → <strong>Samples</strong> 탭 ▸ <strong>Import</strong>.</p>
+<table>
+  <tr><th>패키지</th><th>임포트할 샘플</th></tr>
+  <tr><td>XR Hands (<code>com.unity.xr.hands</code>)</td><td><strong>HandVisualizer</strong></td></tr>
+  <tr><td>XR Interaction Toolkit (<code>com.unity.xr.interaction.toolkit</code>)</td><td><strong>Starter Assets</strong></td></tr>
+</table>
+<p>임포트하면 다음 위치에 들어옵니다:</p>
+<pre><code>Assets/Samples/XR Hands/1.7.3/HandVisualizer
 Assets/Samples/XR Interaction Toolkit/3.4.1/Starter Assets</code></pre>
-  </div>
 
-  <!-- 6 -->
-  <h2 id="s6"><span class="num">6</span>프로젝트 설정 (XR / OpenXR / URP / Input)</h2>
-  <div class="step">
-    <h3>6-1. XR Plug-in Management</h3>
-    <p><b>Project Settings ▸ XR Plug-in Management</b> 에서 <b>PC(데스크톱) 탭</b>과 <b>Android 탭</b> 양쪽 모두:</p>
+<h2 id="s6">6. 프로젝트 설정 (XR / OpenXR / URP / Input)</h2>
+
+<h3>6-1. XR Plug-in Management</h3>
+<p><strong>Project Settings ▸ XR Plug-in Management</strong> 에서 <strong>PC(데스크톱) 탭</strong>과 <strong>Android 탭</strong> 양쪽 모두:</p>
+<ul>
+  <li>☑ <strong>Initialize XR on Startup</strong></li>
+  <li>Plug-in Providers ▸ ☑ <strong>OpenXR</strong></li>
+</ul>
+
+<h3>6-2. OpenXR</h3>
+<p><strong>Project Settings ▸ XR Plug-in Management ▸ OpenXR</strong> — PC/Android 탭 공통:</p>
+<ul>
+  <li><strong>Enabled Interaction Profiles ▸ +</strong> → <strong>Oculus Touch Controller Profile</strong> 추가</li>
+  <li><strong>OpenXR Feature Groups</strong> 체크: ☑ <strong>Hand Interaction Poses</strong>, ☑ <strong>Hand Tracking Subsystem</strong></li>
+</ul>
+<p>탭별 권장 값:</p>
+<table>
+  <tr><th>항목</th><th>PC(데스크톱) 탭</th><th>Android(Quest) 탭</th></tr>
+  <tr><td>Render Mode</td><td>Single Pass Instanced</td><td>Single Pass Instanced \ Multi-view</td></tr>
+  <tr><td>Auto Color Submission Mode</td><td>☑</td><td>☑</td></tr>
+  <tr><td>Latency Optimization</td><td>Prioritize Rendering</td><td>Prioritize Rendering</td></tr>
+  <tr><td>Offscreen Rendering Only (Vulkan)</td><td>—</td><td>☑</td></tr>
+</table>
+<div class="box warn"><strong>OpenXR 경고(▲) 아이콘</strong>위 Interaction Profile / Hand 기능이 빠지면 표시됩니다. 둘을 추가하면 사라집니다.</div>
+
+<h3>6-3. 렌더 파이프라인 (URP)</h3>
+<ul>
+  <li><strong>Project Settings ▸ Graphics</strong> ▸ 활성 렌더 파이프라인을 <strong>URP 에셋</strong>으로 지정 (URP 템플릿이면 자동)</li>
+  <li><strong>Project Settings ▸ Quality</strong> 의 각 레벨도 URP 에셋 사용 확인</li>
+</ul>
+
+<h3>6-4. 입력 시스템</h3>
+<ul>
+  <li><strong>Project Settings ▸ Player ▸ Active Input Handling</strong> = <code>Input System Package (New)</code> (또는 <code>Both</code>)</li>
+</ul>
+
+<h3>6-5. (Quest 빌드 시) Android Player 설정</h3>
+<ul>
+  <li><strong>Player ▸ Other Settings</strong>: Scripting Backend = <strong>IL2CPP</strong>, Target Architectures = <strong>ARM64</strong></li>
+  <li>Minimum API Level은 사용 기기/스토어 요구사항에 맞춰 지정</li>
+</ul>
+
+<h2 id="s7">7. Project Validation (자동 점검·수정)</h2>
+<p><strong>Project Settings ▸ XR Plug-in Management ▸ Project Validation</strong> 에서 설정이 올바른지 자동 점검합니다. <strong>PC 탭과 Android 탭 양쪽</strong> 모두 확인하세요.</p>
+<ol>
+  <li>우측 상단 <strong>Fix All</strong> 클릭 → 자동 처리 항목:
     <ul>
-      <li><span class="chk">☑</span> <b>Initialize XR on Startup</b></li>
-      <li>Plug-in Providers ▸ <span class="chk">☑</span> <b>OpenXR</b></li>
+      <li><code>[OpenXR]</code> PoseControl → <strong>InputSystem.XR.PoseControl</strong> 로 전환</li>
+      <li><code>[OpenXR]</code> Vector2Control → <strong>StickControl</strong> thumbstick 으로 전환</li>
+      <li><code>[XR Plug-in Management]</code> <strong>Run In Background</strong> 활성화</li>
+      <li><code>[XRI][Starter Assets]</code> <strong>Interaction Layer 31 = Teleport</strong> 설정</li>
     </ul>
+  </li>
+  <li>남는 빨간 오류 <strong>“TextMesh Pro - TMP Essentials must be installed”</strong> → 오른쪽 <strong>Edit</strong> 클릭 → <strong>TMP Importer</strong> 창에서 <strong>Import TMP Essentials</strong><br>
+    (또는 <strong>Window ▸ TextMesh Pro ▸ Import TMP Essential Resources</strong>)</li>
+  <li>모든 이슈가 사라지면 설정 완료입니다.</li>
+</ol>
+<div class="box tip"><strong>순서 주의</strong><strong>Fix All</strong>은 5단계의 샘플(Starter Assets/HandVisualizer)을 임포트한 뒤에 실행해야 관련 검사가 모두 나타납니다.</div>
 
-    <h3>6-2. OpenXR</h3>
-    <p><b>Project Settings ▸ XR Plug-in Management ▸ OpenXR</b> — <b>PC/Android 탭 공통</b>:</p>
-    <ul>
-      <li><b>Enabled Interaction Profiles ▸ <span class="kbd">+</span></b> → <b>Oculus Touch Controller Profile</b> 추가</li>
-      <li><b>OpenXR Feature Groups</b>에서 체크:
-        <ul>
-          <li><span class="chk">☑</span> <b>Hand Interaction Poses</b></li>
-          <li><span class="chk">☑</span> <b>Hand Tracking Subsystem</b></li>
-        </ul>
-      </li>
-    </ul>
-    <p>탭별 권장 값:</p>
-    <table>
-      <tr><th>항목</th><th>PC(데스크톱) 탭</th><th>Android(Quest) 탭</th></tr>
-      <tr><td>Render Mode</td><td>Single Pass Instanced</td><td>Single Pass Instanced \ Multi-view</td></tr>
-      <tr><td>Auto Color Submission Mode</td><td><span class="chk">☑</span></td><td><span class="chk">☑</span></td></tr>
-      <tr><td>Latency Optimization</td><td>Prioritize Rendering</td><td>Prioritize Rendering</td></tr>
-      <tr><td>Offscreen Rendering Only (Vulkan)</td><td>—</td><td><span class="chk">☑</span></td></tr>
-    </table>
-    <div class="warn"><b>OpenXR 경고(▲) 아이콘</b>위 Interaction Profile / Hand 기능이 빠지면 표시됩니다. 둘을 추가하면 사라집니다.</div>
-
-    <h3>6-3. 렌더 파이프라인 (URP)</h3>
-    <ul>
-      <li><b>Project Settings ▸ Graphics</b> ▸ 활성 렌더 파이프라인을 <b>URP 에셋</b>으로 지정 (URP 템플릿이면 자동)</li>
-      <li><b>Project Settings ▸ Quality</b> 의 각 레벨도 URP 에셋 사용 확인</li>
-    </ul>
-
-    <h3>6-4. 입력 시스템</h3>
-    <ul>
-      <li><b>Project Settings ▸ Player ▸ Active Input Handling</b> = <code>Input System Package (New)</code> (또는 <code>Both</code>)</li>
-    </ul>
-
-    <h3>6-5. (Quest 빌드 시) Android Player 설정</h3>
-    <ul>
-      <li><b>Player ▸ Other Settings</b>: Scripting Backend = <b>IL2CPP</b>, Target Architectures = <b>ARM64</b></li>
-      <li>Minimum API Level은 사용 기기/스토어 요구사항에 맞춰 지정</li>
-    </ul>
-  </div>
-
-  <!-- 7 -->
-  <h2 id="s7"><span class="num">7</span>Project Validation (자동 점검·수정)</h2>
-  <div class="step">
-    <p><b>Project Settings ▸ XR Plug-in Management ▸ Project Validation</b> 에서 설정이 올바른지 자동 점검합니다. <b>PC 탭과 Android 탭 양쪽</b> 모두 확인하세요.</p>
-    <ol>
-      <li>우측 상단 <b>Fix All</b> 클릭 → 자동 처리 항목:
-        <ul>
-          <li><code>[OpenXR]</code> PoseControl → <b>InputSystem.XR.PoseControl</b> 로 전환</li>
-          <li><code>[OpenXR]</code> Vector2Control → <b>StickControl</b> thumbstick 으로 전환</li>
-          <li><code>[XR Plug-in Management]</code> <b>Run In Background</b> 활성화</li>
-          <li><code>[XRI][Starter Assets]</code> <b>Interaction Layer 31 = Teleport</b> 설정</li>
-        </ul>
-      </li>
-      <li>남는 빨간 오류 <b>“TextMesh Pro - TMP Essentials must be installed”</b> → 오른쪽 <b>Edit</b> 클릭 → <b>TMP Importer</b> 창에서 <b>Import TMP Essentials</b><br>
-        <span class="lead">(또는 <b>Window ▸ TextMesh Pro ▸ Import TMP Essential Resources</b>)</span></li>
-      <li>모든 이슈가 사라지면 설정 완료입니다.</li>
-    </ol>
-    <div class="tip"><b>순서 주의</b><b>Fix All</b>은 5단계의 샘플(Starter Assets/HandVisualizer)을 임포트한 <b>뒤</b>에 실행해야 관련 검사가 모두 나타납니다.</div>
-  </div>
-
-  <!-- 8 -->
-  <h2 id="s8"><span class="num">8</span>데모 실행 — 왼쪽 컨트롤러로 박스 잡기</h2>
-  <div class="step">
-    <ol>
-      <li><b>Demo 샘플 Import</b>: Package Manager ▸ <b>VR Base Package ▸ Samples ▸ Demo ▸ Import</b></li>
-      <li>임포트된 데모 씬 열기:
-        <pre><code class="path">Assets/Samples/VR Base Package/1.0.0/Demo/Test_1.unity</code></pre>
-      </li>
-      <li>Hierarchy 구성 확인:
-        <pre><code>Test_1
+<h2 id="s8">8. 데모 실행 — 왼쪽 컨트롤러로 박스 잡기</h2>
+<ol>
+  <li><strong>Demo 샘플 Import</strong>: Package Manager ▸ <strong>VR Base Package ▸ Samples ▸ Demo ▸ Import</strong></li>
+  <li>임포트된 데모 씬 열기:
+    <pre><code>Assets/Samples/VR Base Package/1.0.0/Demo/Test_1.unity</code></pre>
+  </li>
+  <li>Hierarchy 구성 확인:
+    <pre><code>Test_1
 ├─ Directional Light
 ├─ XR Origin (VR)
 │  └─ Camera Offset
@@ -257,33 +208,28 @@ Assets/Samples/XR Interaction Toolkit/3.4.1/Starter Assets</code></pre>
 │        ├─ Left_NearFarInteractor   ← 잡기용 인터랙터
 │        └─ Hand Visualizer
 └─ Cube                              ← 잡을 박스(그랩 대상)</code></pre>
-      </li>
-      <li>헤드셋 연결(Quest Link/무선) 후 에디터 상단 <b>▶ Play</b></li>
-      <li><b>왼손 컨트롤러</b>를 <code>Cube</code>에 가져가 <b>Grip 버튼</b>으로 잡으면, 핸드포즈가 적용되어 손이 <b>박스 그립 모양</b>으로 잡힙니다.</li>
-    </ol>
-    <div class="tip"><b>성공 기준</b>왼손이 큐브를 잡는 순간 손가락이 미리 녹화된 그립 포즈로 자연스럽게 감기면 성공입니다.</div>
-  </div>
+  </li>
+  <li>헤드셋 연결(Quest Link/무선) 후 에디터 상단 <strong>▶ Play</strong></li>
+  <li><strong>왼손 컨트롤러</strong>를 <code>Cube</code>에 가져가 <strong>Grip 버튼</strong>으로 잡으면, 핸드포즈가 적용되어 손이 박스 그립 모양으로 잡힙니다.</li>
+</ol>
+<div class="box tip"><strong>성공 기준</strong>왼손이 큐브를 잡는 순간 손가락이 미리 녹화된 그립 포즈로 자연스럽게 감기면 성공입니다.</div>
 
-  <!-- 9 -->
-  <h2 id="s9"><span class="num">9</span>문제 해결 (Troubleshooting)</h2>
-  <div class="step">
-    <table>
-      <tr><th>증상</th><th>점검 / 해결</th></tr>
-      <tr><td>손이 그립 포즈로 안 잡힘</td><td><code>Cube</code>에 그립 스크립트 + <code>HandPoseData</code>가 할당돼 있는지, <code>Left_NearFarInteractor</code>가 활성인지 확인</td></tr>
-      <tr><td>컨트롤러/손이 안 보임</td><td>OpenXR에 <b>Oculus Touch Controller Profile</b> + <b>Hand Tracking Subsystem</b>이 켜져 있는지, 헤드셋이 연결됐는지 확인</td></tr>
-      <tr><td>UI 텍스트가 깨짐 / 핑크</td><td><b>TMP Essentials</b> 미설치 — 7단계의 TMP Import 수행</td></tr>
-      <tr><td>화면이 분홍색(머티리얼 깨짐)</td><td>URP가 활성 렌더 파이프라인으로 지정됐는지(6-3) 확인</td></tr>
-      <tr><td>입력이 전혀 안 먹힘</td><td><b>Active Input Handling = New(또는 Both)</b> 확인 후 에디터 재시작</td></tr>
-      <tr><td>OpenXR 옆 ▲ 경고</td><td>Interaction Profile / Hand 기능 누락 — 6-2 재확인</td></tr>
-    </table>
-    <div class="danger"><b>중요</b>이 패키지는 <code>com.smilejsu82.vr-handpose-fire</code>의 모든 기능을 포함한 <b>독립 버전</b>입니다. 두 패키지를 <b>동시에 설치하지 마세요</b> — 스크립트 GUID·asmdef가 겹쳐 컴파일 오류가 납니다.</div>
-  </div>
+<h2 id="s9">9. 문제 해결</h2>
+<table>
+  <tr><th>증상</th><th>점검 / 해결</th></tr>
+  <tr><td>손이 그립 포즈로 안 잡힘</td><td><code>Cube</code>에 그립 스크립트 + <code>HandPoseData</code>가 할당돼 있는지, <code>Left_NearFarInteractor</code>가 활성인지 확인</td></tr>
+  <tr><td>컨트롤러/손이 안 보임</td><td>OpenXR에 <strong>Oculus Touch Controller Profile</strong> + <strong>Hand Tracking Subsystem</strong>이 켜져 있는지, 헤드셋 연결 확인</td></tr>
+  <tr><td>UI 텍스트가 깨짐 / 핑크</td><td><strong>TMP Essentials</strong> 미설치 — 7단계의 TMP Import 수행</td></tr>
+  <tr><td>화면이 분홍색(머티리얼 깨짐)</td><td>URP가 활성 렌더 파이프라인으로 지정됐는지(6-3) 확인</td></tr>
+  <tr><td>입력이 전혀 안 먹힘</td><td><strong>Active Input Handling = New(또는 Both)</strong> 확인 후 에디터 재시작</td></tr>
+  <tr><td>OpenXR 옆 ▲ 경고</td><td>Interaction Profile / Hand 기능 누락 — 6-2 재확인</td></tr>
+</table>
+<div class="box danger"><strong>중요</strong>이 패키지는 <code>com.smilejsu82.vr-handpose-fire</code>의 기능을 포함한 독립 버전입니다. 두 패키지를 <strong>동시에 설치하지 마세요</strong> — 스크립트 GUID·asmdef가 겹쳐 컴파일 오류가 납니다.</div>
 
-  <footer>
-    VR Base Package · 강의 문서 · 2026-06-23 ·
-    <a href="https://github.com/smilejsu82/vr-base-package">github.com/smilejsu82/vr-base-package</a>
-  </footer>
+<footer>
+  VR Base Package · 강의 문서 · 2026-06-23 ·
+  <a href="https://github.com/smilejsu82/vr-base-package">github.com/smilejsu82/vr-base-package</a>
+</footer>
 
-</div>
 </body>
 </html>
