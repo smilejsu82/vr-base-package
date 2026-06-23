@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>능력단위 평가 1번 — 컨트롤러 모델 추적 (Sol_01)</title>
+<style>
+  body {
+    font-family: "Malgun Gothic", "Segoe UI", Arial, sans-serif;
+    color: #222; background: #ffffff; line-height: 1.7;
+    max-width: 900px; margin: 0 auto; padding: 24px 20px 80px; font-size: 16px;
+  }
+  h1 { font-size: 26px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+  h2 { font-size: 21px; margin-top: 36px; border-bottom: 1px solid #ccc; padding-bottom: 6px; }
+  h3 { font-size: 17px; margin-top: 24px; }
+  p { margin: 10px 0; }
+  a { color: #1a6dcc; }
+  ol, ul { padding-left: 24px; }
+  li { margin: 8px 0; }
+  code {
+    background: #f4f4f4; border: 1px solid #ddd; border-radius: 3px;
+    padding: 1px 5px; font-family: Consolas, "Courier New", monospace; font-size: 90%;
+  }
+  pre {
+    background: #f4f4f4; border: 1px solid #ddd; border-radius: 4px;
+    padding: 12px 14px; overflow: auto;
+    font-family: Consolas, "Courier New", monospace; font-size: 14px;
+  }
+  .box {
+    border: 1px solid #ccc; border-left: 4px solid #888;
+    background: #fafafa; padding: 10px 14px; margin: 14px 0;
+  }
+  .problem { border-left-color: #cc3333; background: #fdf6f6; }
+  .note { border-left-color: #1a6dcc; }
+  .tip { border-left-color: #2e9e3f; }
+  .warn { border-left-color: #d39e00; }
+  .box strong { display: block; margin-bottom: 3px; }
+  .goal { background: #f0f0f0; padding: 12px 16px; border: 1px solid #ccc; }
+  footer { margin-top: 50px; padding-top: 16px; border-top: 1px solid #ccc; color: #777; font-size: 13px; }
+  .step-log { color: #006400; }
+</style>
+</head>
+<body>
+
+<h1>능력단위 평가 — 1번 문제</h1>
+
+<div class="box problem">
+  <strong>[1번 문제]</strong>
+  새 씬을 만들어서 <b>왼손·오른손 컨트롤러 모델</b>이 기기의 컨트롤러 움직임에 따라
+  <b>함께 움직이는지</b> 확인하기.
+</div>
+
+<div class="goal">
+  <b>학습 목표:</b> XR Origin (VR) 구성, 컨트롤러 비주얼 배치, Tracked Pose Driver (Input System)를
+  이용해 컨트롤러 모델이 실제 기기 입력을 따라 추적되도록 설정할 수 있다.
+</div>
+
+<h2>Sol_01 — 풀이</h2>
+
+<h3>왼손 컨트롤러 만들기</h3>
+<ol>
+  <li><b>메인 카메라 삭제</b> — Hierarchy의 기본 <code>Main Camera</code>를 삭제한다.</li>
+
+  <li><b>XR Origin (VR) 생성</b> — Hierarchy &gt; 우클릭 &gt; <code>XR &gt; XR Origin (VR)</code> 를 생성한다.</li>
+
+  <li><b>위치 초기화 &amp; 카메라 오프셋 설정</b>
+    <ul>
+      <li><code>XR Origin (VR)</code>의 Transform 위치를 초기화한다 (Position 0, 0, 0).</li>
+      <li><code>XR Origin</code> 컴포넌트의 <b>Camera Y Offset</b> 값을 <b>0</b> 으로 설정한다.</li>
+      <li><code>Camera Offset</code> 게임오브젝트의 Transform 위치도 초기화한다.</li>
+    </ul>
+  </li>
+
+  <li><b>Left Controller 생성</b> — <code>XR Origin</code>을 선택한 상태에서 빈 오브젝트를 생성하고
+    이름을 <b><code>Left Controller</code></b> 로 변경한다.</li>
+
+  <li><b>Visuals 생성</b> — <code>Left Controller</code>를 선택하고 우클릭해서 빈 오브젝트를 생성하고
+    이름을 <b><code>Visuals</code></b> 로 변경한다.</li>
+
+  <li><b>컨트롤러 모델 검색</b> — Project 창에서 <code>xr controller left</code> 를 검색한다.</li>
+
+  <li><b>모델 배치</b> — 검색된 <code>xr controller left</code> 를 <code>Visuals</code> 의 자식으로 넣는다.</li>
+
+  <li><b>위치 초기화</b> — 방금 넣은 모델의 Transform 위치를 초기화한다.</li>
+
+  <li><b>Tracked Pose Driver 부착</b> — <code>Left Controller</code>를 선택하고
+    <b>Tracked Pose Driver (Input System)</b> 컴포넌트를 부착한다.</li>
+
+  <li><b>설정 도구 열기</b> — 메뉴 <code>Tools &gt; VR &gt; Tracked Pose Driver Setup</code> 을 선택한다.</li>
+
+  <li><b>자동 할당</b> — <b>Add &amp; Assign Tracked Pose Driver</b> 버튼을 눌러준다.</li>
+
+  <li><b>설정 확인</b> — 콘솔 로그
+    <span class="step-log"><code>[Pose Driver Setup] 1개의 컨트롤러에 Tracked Pose Driver를 설정했습니다.</code></span>
+    를 확인한다. <code>Left Controller</code> 게임오브젝트를 선택해 인스펙터를 보면
+    <b>Position Input</b>, <b>Rotation Input</b>, <b>Tracking State Input</b> 이 채워진 것을 볼 수 있다.</li>
+
+  <li><b>동작 확인</b> — 실행(Play) 후 <b>왼손 컨트롤러</b>를 움직여 모델이 함께 움직이는지 확인한다.</li>
+</ol>
+
+<h3>오른손 컨트롤러 만들기</h3>
+<ol start="14">
+  <li><b>오른손도 동일하게 제작</b> — 위 4~13단계를 그대로 반복하되 다음만 바꾼다.
+    <ul>
+      <li>빈 오브젝트 이름: <b><code>Right Controller</code></b></li>
+      <li>Project 검색어: <code>xr controller right</code></li>
+      <li>나머지(Visuals 생성, 모델 배치, 위치 초기화, Tracked Pose Driver 부착, 자동 할당)는 동일하게 진행</li>
+    </ul>
+  </li>
+</ol>
+
+<div class="box tip">
+  <strong>완성 하이어라키</strong>
+  <pre>XR Origin (VR)
+└─ Camera Offset
+   ├─ Main Camera
+   ├─ Left Controller        (Tracked Pose Driver)
+   │  └─ Visuals
+   │     └─ XR Controller Left (모델)
+   └─ Right Controller       (Tracked Pose Driver)
+      └─ Visuals
+         └─ XR Controller Right (모델)</pre>
+</div>
+
+<div class="box note">
+  <strong>참고</strong>
+  컨트롤러 모델(<code>XR Controller Left/Right</code>)은 XRI Starter Assets 샘플에 포함되어 있습니다.
+  검색이 안 되면 Package Manager에서 <b>XR Interaction Toolkit ▸ Samples ▸ Starter Assets</b> 를 먼저 Import 하세요.
+</div>
+
+<div class="box warn">
+  <strong>확인 포인트</strong>
+  실제 기기(Quest/Link)를 연결한 상태에서 Play 해야 컨트롤러 추적이 동작합니다.
+  좌·우 컨트롤러를 움직였을 때 두 모델이 각각 따라 움직이면 통과입니다.
+</div>
+
+<footer>
+  능력단위 평가 1번 · Sol_01 · VR Base Package ·
+  <a href="https://github.com/smilejsu82/vr-base-package">github.com/smilejsu82/vr-base-package</a>
+</footer>
+
+</body>
+</html>
