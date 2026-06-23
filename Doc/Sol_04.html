@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>능력단위 평가 4번 — 핸드포즈 녹화 &amp; 그립 포즈 적용 (Sol_04)</title>
+<style>
+  body {
+    font-family: "Malgun Gothic", "Segoe UI", Arial, sans-serif;
+    color: #222; background: #ffffff; line-height: 1.7;
+    max-width: 900px; margin: 0 auto; padding: 24px 20px 80px; font-size: 16px;
+  }
+  h1 { font-size: 26px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+  h2 { font-size: 21px; margin-top: 36px; border-bottom: 1px solid #ccc; padding-bottom: 6px; }
+  h3 { font-size: 17px; margin-top: 24px; }
+  p { margin: 10px 0; }
+  a { color: #1a6dcc; }
+  ol, ul { padding-left: 24px; }
+  li { margin: 8px 0; }
+  code {
+    background: #f4f4f4; border: 1px solid #ddd; border-radius: 3px;
+    padding: 1px 5px; font-family: Consolas, "Courier New", monospace; font-size: 90%;
+  }
+  pre {
+    background: #f4f4f4; border: 1px solid #ddd; border-radius: 4px;
+    padding: 12px 14px; overflow: auto;
+    font-family: Consolas, "Courier New", monospace; font-size: 14px;
+  }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 15px; }
+  th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+  th { background: #f0f0f0; }
+  .box {
+    border: 1px solid #ccc; border-left: 4px solid #888;
+    background: #fafafa; padding: 10px 14px; margin: 14px 0;
+  }
+  .problem { border-left-color: #cc3333; background: #fdf6f6; }
+  .note { border-left-color: #1a6dcc; }
+  .tip { border-left-color: #2e9e3f; }
+  .warn { border-left-color: #d39e00; }
+  .danger { border-left-color: #cc3333; background: #fdf6f6; }
+  .box strong { display: block; margin-bottom: 3px; }
+  .goal { background: #f0f0f0; padding: 12px 16px; border: 1px solid #ccc; }
+  footer { margin-top: 50px; padding-top: 16px; border-top: 1px solid #ccc; color: #777; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<h1>능력단위 평가 — 4번 문제</h1>
+
+<div class="box problem">
+  <strong>[4번 문제]</strong>
+  핸드트래킹으로 큐브 잡는 손모양을 <b>녹화(스냅샷)</b> 하고, 그 포즈를 컨트롤러 잡기에 적용해서
+  컨트롤러로 큐브를 잡았을 때 손이 <b>스냅샷한 그립 모양</b>으로 잡히게 만들기.
+</div>
+
+<div class="goal">
+  <b>학습 목표:</b> Hand Visualizer로 핸드트래킹을 띄우고, Hand Pose Recorder로 그립 포즈를
+  스냅샷한 뒤 Grab Attach / Interactor Attach 도구로 컨트롤러 잡기에 손 포즈를 정렬할 수 있다.
+</div>
+
+<div class="box note">
+  <strong>사전 조건</strong>
+  <a href="Sol_03.html">Sol_03</a> 씬이 완성되어 있어야 합니다. 핸드트래킹은 실제 기기(Quest/Link)에서만 동작합니다.
+</div>
+
+<h2>Sol_04 — 풀이</h2>
+
+<h3>1) 씬 준비</h3>
+<ol>
+  <li><b>씬 복사</b> — <code>Sol_03</code> 씬을 복사해서 <b><code>Sol_04</code></b> 로 만든다.</li>
+  <li><b>씬 열기</b> — <code>Sol_04</code> 를 열어준다.</li>
+  <li><b>컨트롤러 비활성화</b> — 씬에 있는 <code>Left Controller</code>, <code>Right Controller</code> 를 비활성화한다.</li>
+</ol>
+
+<h3>2) Hand Visualizer 구성 (핸드트래킹)</h3>
+<ol start="4">
+  <li><b>샘플 씬 열기</b> — <code>Samples &gt; XR Hands</code> 밑에 있는 <b>HandVisualizer</b> 씬을 연다.</li>
+  <li><b>컴포넌트 복사</b> — <code>XR Origin</code> 밑에 있는 <code>Hand Visualizer</code> 를 선택하고,
+    <b>Hand Visualizer</b> 컴포넌트에 우클릭 → <b>Copy Component</b> 로 복사한다.</li>
+  <li><b>빈 오브젝트 생성</b> — 다시 <code>Sol_04</code> 씬을 열고, <code>XR Origin</code> 에 우클릭해서 빈 오브젝트를
+    생성하고 이름을 <b><code>Hand Visualizer</code></b> 로 변경한다.</li>
+  <li><b>컴포넌트 붙여넣기</b> — 그 오브젝트의 <b>Transform</b> 에 우클릭 → 아까 복사한 컴포넌트를
+    <b>Paste Component As New</b> 로 붙여 넣는다.</li>
+  <li><b>Hand Processor 부착</b> — <code>Hand Visualizer</code> 를 선택해 <b>Add Component</b> 로
+    <b>Hand Processor</b> 컴포넌트를 부착한다.</li>
+  <li><b>핸드트래킹 확인</b> — 실행해서 핸드트래킹이 잘 동작하는지 확인한다.</li>
+</ol>
+
+<h3>3) 핸드포즈 녹화 (Hand Pose Recorder)</h3>
+<ol start="10">
+  <li><b>도구 열기</b> — <code>Tools &gt; Hand Pose Recorder</code> 를 열어준다.</li>
+  <li><b>Attach Target</b> — <b>Attach Target</b> 에 <code>Cube</code> 를 할당한다.</li>
+  <li><b>Ghost Hand Model</b> — Project 창의 <code>XR Hands &gt; 1.7.3</code> 밑에 있는
+    <b>LeftHand 프리팹</b>을 <b>Ghost Hand Model</b> 에 넣어준다.</li>
+  <li><b>1차 스냅샷</b> — 실행해서 큐브를 잡는 포즈를 핸드트래킹으로 연출한 후,
+    Hand Pose Recorder의 <b>Attach To Target (즉시)</b> 버튼을 눌러준다.</li>
+</ol>
+
+<div class="box danger">
+  <strong>중요 — 큐브 크기 점검 (스냅샷 전에 반드시 확인)</strong>
+  <ul style="margin:6px 0">
+    <li><code>Cube</code>(최상위)의 <b>Scale 은 (1, 1, 1)</b> 이어야 한다. 이전 시간에 잘못 만들었으면 수정한다.</li>
+    <li>대신 <code>Cube &gt; Visuals &gt; Mesh</code> 의 크기를 <b>(0.1, 0.1, 0.1)</b>, <code>Col</code> 의 크기도 <b>(0.1, 0.1, 0.1)</b> 로 만든다.</li>
+    <li><b>절대 <code>Cube</code>(최상위 오브젝트)의 크기를 변경하지 말 것!</b> (최상위 스케일이 1이 아니면 스냅샷 포즈가 어긋난다)</li>
+  </ul>
+</div>
+
+<ol start="14">
+  <li><b>재실행 스냅샷</b> — 크기를 바로잡았으면 다시 실행해서 핸드트래킹으로 잡는 손모양을 연출한 후
+    Hand Pose Recorder에서 <b>Attach To Target (즉시)</b> 버튼을 눌러본다.</li>
+  <li><b>저장 위치 확인</b> — 저장된 고스트 핸드는 <code>Assets/HandPoses/Prefabs</code> 에 저장된다.</li>
+  <li><b>프리팹 배치</b> — 에디터를 중지하고, 방금 스냅샷한 프리팹
+    (<code>Assets/HandPoses/Prefabs/HandPose_Snapshot</code>)을 끌어다가 <code>Cube</code> 자식으로 넣어준다.</li>
+</ol>
+
+<h3>4) 그립 포즈를 컨트롤러 잡기에 연결</h3>
+<ol start="17">
+  <li><b>모드 전환</b> — <code>XR Origin</code> 의 <code>Hand Visualizer</code> 를 <b>비활성화</b>하고,
+    <code>Left Controller</code> 를 <b>활성화</b>한다.</li>
+  <li><b>그립 포즈 컴포넌트</b> — <code>Left Controller</code> 에 <b>Controller Grab Hand Pose</b> 컴포넌트를 부착한다.</li>
+  <li><b>Cube 컴포넌트</b> — <code>Cube</code> 를 선택하고 <b>Cube</b> 컴포넌트를 부착한다.</li>
+  <li><b>Cube Data 할당</b> — Cube 컴포넌트의 <b>Cube Data</b> 에
+    <code>Assets/HandPoses/HandPose_Snapshot</code> (ScriptableObject)를 끌어다가 할당한다.</li>
+  <li><b>Grab Attach 생성</b> — <code>Cube</code> 자식에 있는 <code>HandPose_Snapshot</code> 을 선택하고
+    <code>Tools &gt; VR &gt; Create Grab Attach...</code> 를 선택하면,
+    <code>HandPose_Snapshot</code> 자식으로 <b>GrabAttach (Ghost Wrist)</b> 가 생겨난다.</li>
+  <li><b>Attach Transform 연결</b> — <code>Cube</code> 를 선택해서 <b>XR Grab Interactable</b> 컴포넌트의
+    <b>Attach Transform</b> 에 방금 생긴 <b>GrabAttach (Ghost Wrist)</b> 를 넣어준다.</li>
+  <li><b>Interactor Attach 정렬</b> — <code>Left Controller</code> 를 선택하고
+    <code>Tools &gt; VR &gt; Align Interactor Attach...</code> 를 선택하면,
+    <code>Left_NearFarInteractor</code> 자식으로 <b>InteractorAttach (Wrist)</b> 가 생성된다.</li>
+  <li><b>최종 확인</b> — 실행 후 큐브를 컨트롤러로 잡아보면 손 모델이 아까 스냅샷한
+    <b>손모양 그대로</b> 잡혀야 한다.</li>
+</ol>
+
+<div class="box tip">
+  <strong>핵심 흐름 요약</strong>
+  <pre>핸드트래킹으로 포즈 연출
+   → Hand Pose Recorder "Attach To Target"으로 스냅샷
+   → 스냅샷 프리팹을 Cube 자식으로
+   → Cube 컴포넌트에 HandPose_Snapshot(SO) 할당
+   → Create Grab Attach (Ghost Wrist) → XR Grab Interactable의 Attach Transform
+   → Align Interactor Attach (Wrist)
+   → 컨트롤러로 잡으면 스냅샷 손모양으로 잡힘</pre>
+</div>
+
+<div class="box warn">
+  <strong>문제 해결</strong>
+  손이 어긋나게 잡히면 ① <code>Cube</code> 최상위 Scale이 (1,1,1)인지, ② Attach Transform이
+  <b>GrabAttach (Ghost Wrist)</b> 로 연결됐는지, ③ <b>InteractorAttach (Wrist)</b> 가 생성·정렬됐는지 확인하세요.
+</div>
+
+<footer>
+  능력단위 평가 4번 · Sol_04 · VR Base Package ·
+  <a href="https://github.com/smilejsu82/vr-base-package">github.com/smilejsu82/vr-base-package</a>
+</footer>
+
+</body>
+</html>
