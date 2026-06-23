@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>능력단위 평가 5번 — 양손으로 실린더 잡기 (Sol_05)</title>
+<style>
+  body {
+    font-family: "Malgun Gothic", "Segoe UI", Arial, sans-serif;
+    color: #222; background: #ffffff; line-height: 1.7;
+    max-width: 900px; margin: 0 auto; padding: 24px 20px 80px; font-size: 16px;
+  }
+  h1 { font-size: 26px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+  h2 { font-size: 21px; margin-top: 36px; border-bottom: 1px solid #ccc; padding-bottom: 6px; }
+  h3 { font-size: 17px; margin-top: 24px; }
+  p { margin: 10px 0; }
+  a { color: #1a6dcc; }
+  ol, ul { padding-left: 24px; }
+  li { margin: 8px 0; }
+  code {
+    background: #f4f4f4; border: 1px solid #ddd; border-radius: 3px;
+    padding: 1px 5px; font-family: Consolas, "Courier New", monospace; font-size: 90%;
+  }
+  pre {
+    background: #f4f4f4; border: 1px solid #ddd; border-radius: 4px;
+    padding: 12px 14px; overflow: auto;
+    font-family: Consolas, "Courier New", monospace; font-size: 14px;
+  }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 15px; }
+  th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+  th { background: #f0f0f0; }
+  .box {
+    border: 1px solid #ccc; border-left: 4px solid #888;
+    background: #fafafa; padding: 10px 14px; margin: 14px 0;
+  }
+  .problem { border-left-color: #cc3333; background: #fdf6f6; }
+  .note { border-left-color: #1a6dcc; }
+  .tip { border-left-color: #2e9e3f; }
+  .warn { border-left-color: #d39e00; }
+  .danger { border-left-color: #cc3333; background: #fdf6f6; }
+  .box strong { display: block; margin-bottom: 3px; }
+  .goal { background: #f0f0f0; padding: 12px 16px; border: 1px solid #ccc; }
+  footer { margin-top: 50px; padding-top: 16px; border-top: 1px solid #ccc; color: #777; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<h1>능력단위 평가 — 5번 문제</h1>
+
+<div class="box problem">
+  <strong>[5번 문제]</strong>
+  실린더를 <b>양손(왼손·오른손)</b>으로 잡기. 각 손은 자기 포즈로 잡혀야 하고,
+  왼손→오른손 / 오른손→왼손 어느 순서로 잡아도 <b>고스트 핸드 위치</b>에 정확히 잡혀야 한다.
+</div>
+
+<div class="goal">
+  <b>학습 목표:</b> 양손용 콜라이더를 구성하고, 좌·우 핸드포즈를 각각 녹화하여
+  XR Grab Interactable의 <b>다중(Multiple) 선택 모드 + Secondary Attach Transform</b> 으로
+  두 손 잡기를 구현할 수 있다. 또한 잡을 물체용 컴포넌트(포즈 2개 보유)를 작성할 수 있다.
+</div>
+
+<div class="box note">
+  <strong>사전 조건</strong>
+  <a href="Sol_04.html">Sol_04</a> 의 흐름(핸드포즈 녹화 → Grab Attach / Interactor Attach)을 이해하고 있어야 합니다.
+</div>
+
+<h2>Sol_05 — 풀이</h2>
+
+<h3>1) 씬 준비 &amp; 실린더 만들기</h3>
+<ol>
+  <li><b>씬 복사</b> — <code>Sol_04</code> 를 복사해서 <b><code>Sol_05</code></b> 를 만든다.</li>
+  <li><b>씬 열기</b> — <code>Sol_05</code> 씬을 연다.</li>
+  <li><b>Cube 삭제</b> — 기존 <code>Cube</code> 를 삭제한다.</li>
+  <li><b>Cylinder 생성</b> — 빈 게임 오브젝트를 생성하고 이름을 <b><code>Cylinder</code></b> 로 변경한다.</li>
+  <li><b>위치 설정</b> — 위치를 <b><code>(0, 1.1, 0.5)</code></b> 로 변경한다.</li>
+  <li><b>Visuals 생성</b> — <code>Cylinder</code> 를 선택하고 자식으로 <code>Visuals</code> 빈 오브젝트를 생성한다.</li>
+  <li><b>Mesh 생성</b> — <code>Visuals</code> 아래 <code>3D Object &gt; Cylinder</code> 를 생성한다.</li>
+  <li><b>크기 설정</b> — 크기를 <b><code>(0.1, 0.3, 0.1)</code></b> 로 변경한다.</li>
+  <li><b>콜라이더 제거</b> — 자동으로 붙은 <b>Capsule Collider 를 제거</b>한다.</li>
+  <li><b>이름 변경</b> — 이름을 <b><code>Mesh</code></b> 로 변경한다.</li>
+  <li><b>Col 생성</b> — <code>Cylinder</code> 를 선택하고 자식으로 <code>Col</code> 빈 오브젝트를 만들고
+    <b>Capsule Collider</b> 를 추가한다.</li>
+  <li><b>콜라이더 사이즈</b> — Capsule Collider의 <b>Radius = 0.05</b>, <b>Height = 0.2</b> 로 변경한다.</li>
+  <li><b>좌·우 콜라이더</b> — <code>Col</code> 의 이름을 <b><code>Col_L</code></b> 로 변경한 후 복사해서 <b><code>Col_R</code></b> 를 생성한다.</li>
+  <li><b>위치 배치</b> — <code>Col_L</code> 은 위쪽으로, <code>Col_R</code> 은 아래쪽으로 위치시킨다. (양손이 잡을 두 지점)</li>
+</ol>
+
+<h3>2) 양손 핸드포즈 녹화</h3>
+<ol start="15">
+  <li><b>모드 전환</b> — <code>Left/Right Controller</code> 를 비활성화하고 <code>Hand Visualizer</code> 를 활성화한다.</li>
+  <li><b>좌·우 스냅샷</b> — 실행 후 왼손·오른손 핸드트래킹으로 손모양을 연출해
+    <code>Tools &gt; Hand Pose Recorder</code> 로 <b>Attach To Target</b> 한다.
+    <ul>
+      <li>왼손/오른손을 따로 만들어야 하므로 Hand Pose Recorder에서 <b>Hand Name 을 변경</b>한다(좌/우 구분).</li>
+      <li><b>Attach Target</b> = 씬의 <code>Cylinder</code></li>
+      <li><b>Ghost Hand Model</b> = <code>LeftHand</code> / <code>RightHand</code> 프리팹(각각)</li>
+    </ul>
+  </li>
+  <li><b>고스트 핸드 배치</b> — 플레이를 중지하고, 방금 스냅샷한 <b>왼손·오른손 고스트 핸드</b>를
+    <code>Cylinder</code> 에 넣어준다.</li>
+</ol>
+
+<h3>3) Grab / 그립 설정</h3>
+<ol start="18">
+  <li><b>XR Grab Interactable</b> — <code>Cylinder</code> 를 선택하고 <b>XR Grab Interactable</b> 컴포넌트를 부착한다.</li>
+  <li><b>물리 설정</b> — <b>Rigidbody</b> 의 <b>Use Gravity</b> 체크 해제, <b>XR Grab Interactable</b> 의
+    <b>Throw On Detach</b> 체크 해제.</li>
+  <li><b>모드 전환</b> — <code>Hand Visualizer</code> 를 비활성화하고 왼손·오른손 컨트롤러를 활성화한다.</li>
+  <li><b>그립 포즈 컴포넌트</b> — 왼손·오른손 컨트롤러에 <b>Controller Grab Hand Pose</b> 컴포넌트가 붙어 있어야 한다.</li>
+  <li><b>Interactor Attach</b> — <code>Left Controller</code> 를 선택하고
+    <code>Tools &gt; VR &gt; Align Interactor Attach...</code> 로 Attach Transform을 만든다. <b>(오른쪽도 동일)</b></li>
+  <li><b>Grab Attach</b> — <code>Cylinder</code> 의 <b>왼손 HandPose 스냅샷</b>을 선택하고
+    <code>Tools &gt; VR &gt; Create Grab Attach...</code> 로 Attach Transform을 만든다. <b>(오른쪽도 동일)</b></li>
+</ol>
+
+<h3>4) 양손(다중) 잡기 연결</h3>
+<ol start="24">
+  <li><b>다중 선택 모드</b> — <code>Cylinder</code> 를 선택하고 <b>XR Grab Interactable</b> 의
+    <b>Select Mode</b> 를 <code>Single</code> → <b><code>Multiple</code></b> 로 변경한다.</li>
+  <li><b>Attach Transform 할당</b> — <code>Cylinder</code> 의 XR Grab Interactable의
+    <b>Attach Transform</b> 과 <b>Secondary Attach Transform</b> 에 각각 할당한다.
+    <ul>
+      <li>왼손 → 왼손 <b>Grab Attach (Ghost Wrist)</b></li>
+      <li>오른손 → 오른손 <b>Grab Attach (Ghost Wrist)</b></li>
+    </ul>
+  </li>
+</ol>
+
+<h3>5) 실린더 컴포넌트 (포즈 2개) 작성</h3>
+<ol start="26">
+  <li><b>Cylinder 컴포넌트 만들기</b> — (Cursor 등으로) <code>Cube</code> 컴포넌트와 같은 방식의
+    <b>Cylinder</b> 컴포넌트를 만들어 <code>Cylinder</code> 게임 오브젝트에 부착한다.
+    <div class="box danger" style="margin-top:8px">
+      <strong>주의 — 핸드포즈가 1개가 아니다</strong>
+      <ul style="margin:6px 0">
+        <li><code>Assets/HandPoses</code> 의 <b>HandPose_Snapshot_Left</b> 와 <b>HandPose_Snapshot_Right</b> 를 각각 할당할 수 있어야 한다.</li>
+        <li><code>Left Controller</code>, <code>Right Controller</code> 의 <b>Controller Grab Hand Pose</b> 가 그에 맞는 포즈를 취해야 한다(왼손은 왼손 포즈, 오른손은 오른손 포즈).</li>
+      </ul>
+    </div>
+  </li>
+</ol>
+
+<h3>6) 마무리 &amp; 확인</h3>
+<ol start="27">
+  <li><b>잡았을 때 처리</b> — 잡는 순간, 왼손·오른손 컨트롤러 <b>모델이 물리 컨트롤러를 움직여도
+    함께 움직이지 않아야</b> 하며(포즈 고정), 고스트 핸드는 <b>비활성화</b>되어야 한다.</li>
+  <li><b>확인 포인트</b>
+    <ul>
+      <li>왼손 먼저 잡고 → 오른손 잡기</li>
+      <li>오른손 먼저 잡고 → 왼손 잡기</li>
+      <li>두 경우 모두 각 손이 <b>고스트 핸드 위치(스냅샷 포즈)</b> 에 정확히 잡혀야 한다.</li>
+    </ul>
+  </li>
+</ol>
+
+<div class="box tip">
+  <strong>완성 실린더 구조</strong>
+  <pre>Cylinder              (XR Grab Interactable[Multiple] + Rigidbody + Cylinder 컴포넌트)
+├─ Visuals
+│  └─ Mesh            (3D Cylinder, Scale 0.1/0.3/0.1, Collider 제거)
+├─ Col_L             (Capsule Collider R0.05 H0.2 — 위쪽)
+├─ Col_R             (Capsule Collider R0.05 H0.2 — 아래쪽)
+├─ HandPose_Snapshot_Left   → GrabAttach (Ghost Wrist)
+└─ HandPose_Snapshot_Right  → GrabAttach (Ghost Wrist)</pre>
+</div>
+
+<div class="box note">
+  <strong>Attach 매핑 요약</strong>
+  <table>
+    <tr><th>손</th><th>Interactor Attach</th><th>Grab Attach</th><th>실린더 슬롯</th></tr>
+    <tr><td>왼손</td><td>InteractorAttach (Wrist) — Left</td><td>GrabAttach (Ghost Wrist) — Left</td><td>Attach Transform</td></tr>
+    <tr><td>오른손</td><td>InteractorAttach (Wrist) — Right</td><td>GrabAttach (Ghost Wrist) — Right</td><td>Secondary Attach Transform</td></tr>
+  </table>
+</div>
+
+<footer>
+  능력단위 평가 5번 · Sol_05 · VR Base Package ·
+  <a href="https://github.com/smilejsu82/vr-base-package">github.com/smilejsu82/vr-base-package</a>
+</footer>
+
+</body>
+</html>
