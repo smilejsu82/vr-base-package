@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>능력단위 평가 3번 — 손 모델 + 그립 애니메이션 (Sol_03)</title>
+<style>
+  body {
+    font-family: "Malgun Gothic", "Segoe UI", Arial, sans-serif;
+    color: #222; background: #ffffff; line-height: 1.7;
+    max-width: 900px; margin: 0 auto; padding: 24px 20px 80px; font-size: 16px;
+  }
+  h1 { font-size: 26px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+  h2 { font-size: 21px; margin-top: 36px; border-bottom: 1px solid #ccc; padding-bottom: 6px; }
+  h3 { font-size: 17px; margin-top: 24px; }
+  p { margin: 10px 0; }
+  a { color: #1a6dcc; }
+  ol, ul { padding-left: 24px; }
+  li { margin: 8px 0; }
+  code {
+    background: #f4f4f4; border: 1px solid #ddd; border-radius: 3px;
+    padding: 1px 5px; font-family: Consolas, "Courier New", monospace; font-size: 90%;
+  }
+  pre {
+    background: #f4f4f4; border: 1px solid #ddd; border-radius: 4px;
+    padding: 12px 14px; overflow: auto;
+    font-family: Consolas, "Courier New", monospace; font-size: 14px;
+  }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 15px; }
+  th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+  th { background: #f0f0f0; }
+  .box {
+    border: 1px solid #ccc; border-left: 4px solid #888;
+    background: #fafafa; padding: 10px 14px; margin: 14px 0;
+  }
+  .problem { border-left-color: #cc3333; background: #fdf6f6; }
+  .note { border-left-color: #1a6dcc; }
+  .tip { border-left-color: #2e9e3f; }
+  .warn { border-left-color: #d39e00; }
+  .box strong { display: block; margin-bottom: 3px; }
+  .goal { background: #f0f0f0; padding: 12px 16px; border: 1px solid #ccc; }
+  footer { margin-top: 50px; padding-top: 16px; border-top: 1px solid #ccc; color: #777; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<h1>능력단위 평가 — 3번 문제</h1>
+
+<div class="box problem">
+  <strong>[3번 문제]</strong>
+  컨트롤러 모델 대신 <b>손 모델</b>을 표시하고, 그립 버튼을 누르면 손이 <b>쥐는 애니메이션</b>이
+  동작하도록 만들기. (큐브도 잡을 수 있어야 함)
+</div>
+
+<div class="goal">
+  <b>학습 목표:</b> 손 모델 교체, HandGlow 머티리얼 적용, Hand 컴포넌트의 Input Device
+  Characteristics 설정, Animator + XRHand 컨트롤러로 그립 애니메이션을 연결할 수 있다.
+</div>
+
+<div class="box note">
+  <strong>사전 조건</strong>
+  <a href="Sol_02.html">Sol_02</a> 씬이 완성되어 있어야 합니다 (컨트롤러로 큐브를 잡는 상태).
+</div>
+
+<h2>Sol_03 — 풀이</h2>
+
+<h3>씬 준비 &amp; 손 모델 교체</h3>
+<ol>
+  <li><b>씬 복사</b> — <code>Sol_02</code> 씬을 복사해서 <b><code>Sol_03</code></b> 으로 만든다.</li>
+  <li><b>씬 열기</b> — <code>Sol_03</code> 씬을 열어준다.</li>
+  <li><b>컨트롤러 모델 제거</b> — <code>Left Controller</code> 의 <code>Visuals</code> 자식에 있는
+    <code>XR Controller Left</code> 를 제거한다.</li>
+  <li><b>손 모델 배치</b> — <code>XR Hands &gt; 1.7.3 &gt; HandVisualizer &gt; Models</code> 에 있는
+    <code>LeftHand</code> 를 끌어다가 <code>Visuals</code> 에 넣는다.</li>
+  <li><b>위치 초기화</b> — 방금 넣은 모델의 Transform 위치를 초기화한다.</li>
+  <li><b>머티리얼 적용</b> — <code>Packages &gt; VR Base Package</code> 에서 <b>HandGlow</b> 머티리얼을 끌어다가
+    <code>Visuals</code> 자식에 있는 <code>LeftHand/LeftHand</code> 에 넣는다.</li>
+</ol>
+
+<h3>Hand &amp; Animator 설정</h3>
+<ol start="7">
+  <li><b>Hand 컴포넌트</b> — 최상위 <code>LeftHand</code> 를 선택하고 <b>Add Component</b> 로
+    <b>Hand</b> 컴포넌트를 부착한다.</li>
+  <li><b>입력 특성 설정</b> — Hand 컴포넌트의 <b>Input Device Characteristics</b> 를 선택해
+    <b>Controller</b>, <b>Left</b> 둘 다 선택한다.</li>
+  <li><b>Animator 부착</b> — <code>LeftHand</code> 를 선택해 <b>Add Component</b> 로
+    <b>Animator</b> 컴포넌트를 부착한다.</li>
+  <li><b>컨트롤러 할당</b> — VR Base Package에 있는 <b><code>XRHand_L</code></b> 애니메이터 컨트롤러를
+    Animator 컴포넌트의 <b>Controller</b> 에 할당한다.</li>
+  <li><b>1차 확인</b> — 실행 후 왼쪽 컨트롤러의 <b>그립 버튼</b>을 눌러 애니메이션이 동작하는지 확인한다.</li>
+</ol>
+
+<h3>손 각도 보정 (실행 중 → 복사/붙여넣기)</h3>
+<ol start="12">
+  <li><b>각도 수정 &amp; 복사</b> — 동작은 하는데 손의 각도가 맞지 않는다면, <b>실행하는 도중에</b>
+    <code>LeftHand</code> 의 Transform <b>Rotation</b> 을 바꿔가며 올바른 각도로 맞춘다.
+    예시 값: <b><code>(-27.4, 5.98, 82.79)</code></b><br>
+    맞췄다면 <b>Transform 컴포넌트에 우클릭 → Copy &gt; Component</b> 를 누른 후 <b>에디터를 중지</b>한다.
+    <div class="box warn" style="margin-top:8px"><strong>주의</strong>실행(Play) 중에 바꾼 값은 정지하면 사라집니다. 반드시 <b>정지 전에 Copy</b> 해두세요.</div>
+  </li>
+  <li><b>붙여넣기</b> — (정지 후) <code>LeftHand</code> 를 선택하고 Transform에 <b>우클릭 → Paste</b> 로 붙여넣기 한다.</li>
+  <li><b>최종 확인</b> — 다시 실행해서 ① 손이 올바르게 나오는지 ② 그립 버튼을 누르면 애니메이션이
+    동작하는지 ③ 큐브를 잡을 수 있는지 확인한다.</li>
+</ol>
+
+<h3>오른손 적용</h3>
+<ol start="15">
+  <li><b>오른손도 동일하게</b> — 위 과정을 오른손에 적용한다.
+    <ul>
+      <li><code>Right Controller</code> 의 <code>XR Controller Right</code> 제거</li>
+      <li><code>HandVisualizer &gt; Models</code> 의 <code>RightHand</code> 배치 → 위치 초기화 → <b>HandGlow</b> 적용</li>
+      <li><b>Hand</b> 컴포넌트: Input Device Characteristics = <b>Controller</b>, <b>Right</b></li>
+      <li><b>Animator</b> 컨트롤러: <b><code>XRHand_R</code></b> 할당</li>
+      <li>각도 보정 후 큐브 잡기 확인</li>
+    </ul>
+  </li>
+</ol>
+
+<div class="box note">
+  <strong>설정 요약</strong>
+  <table>
+    <tr><th>항목</th><th>왼손</th><th>오른손</th></tr>
+    <tr><td>손 모델 (HandVisualizer/Models)</td><td>LeftHand</td><td>RightHand</td></tr>
+    <tr><td>머티리얼</td><td colspan="2">HandGlow (VR Base Package)</td></tr>
+    <tr><td>Hand ▸ Input Device Characteristics</td><td>Controller + Left</td><td>Controller + Right</td></tr>
+    <tr><td>Animator ▸ Controller</td><td>XRHand_L</td><td>XRHand_R</td></tr>
+  </table>
+</div>
+
+<div class="box tip">
+  <strong>완성 구조 (왼손 기준)</strong>
+  <pre>Left Controller        (Tracked Pose Driver)
+├─ Visuals
+│  └─ LeftHand         (Hand + Animator[XRHand_L])
+│     └─ LeftHand      (Mesh, HandGlow 머티리얼)
+└─ Left_NearFarInteractor</pre>
+</div>
+
+<footer>
+  능력단위 평가 3번 · Sol_03 · VR Base Package ·
+  <a href="https://github.com/smilejsu82/vr-base-package">github.com/smilejsu82/vr-base-package</a>
+</footer>
+
+</body>
+</html>
