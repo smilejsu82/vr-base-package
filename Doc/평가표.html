@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>게임플랫폼 응용 프로그래밍 능력단위 평가표</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --bg: #08090d;
+      --panel: #11131a;
+      --panel-soft: #171923;
+      --line: #252836;
+      --text: #f4f5f7;
+      --sub: #9aa0ad;
+      --accent: #7c5cff;
+      --accent-soft: rgba(124, 92, 255, 0.16);
+      --success: #35c46a;
+      --warning: #ffcc66;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(124, 92, 255, 0.18), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(53, 196, 106, 0.08), transparent 28%),
+        var(--bg);
+      color: var(--text);
+      padding: 48px 20px;
+    }
+
+    .wrap { max-width: 1160px; margin: 0 auto; }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-left: 10px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 204, 102, 0.16);
+      color: var(--warning);
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      vertical-align: middle;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: -0.04em;
+      line-height: 1.12;
+    }
+
+    .desc {
+      margin: 12px 0 0;
+      color: var(--sub);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .meta-box {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .meta-item {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(17, 19, 26, 0.7);
+    }
+
+    .meta-label {
+      color: var(--sub);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .meta-value {
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .score-card {
+      min-width: 180px;
+      padding: 18px;
+      background: rgba(17, 19, 26, 0.78);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    .score-label { color: var(--sub); font-size: 13px; margin-bottom: 8px; }
+    .score { font-size: 32px; letter-spacing: -0.04em; }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: rgba(17, 19, 26, 0.7);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+    }
+
+    .student-input {
+      width: 100%;
+      max-width: 320px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+    }
+
+    .student-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+
+    .btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 11px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.18s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .grid { display: grid; gap: 16px; }
+
+    .problem-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: rgba(17, 19, 26, 0.78);
+      border-radius: var(--radius);
+      backdrop-filter: blur(20px);
+      transition: 0.18s ease;
+    }
+
+    .problem-card.full {
+      border-color: rgba(53, 196, 106, 0.6);
+      background: linear-gradient(135deg, rgba(53, 196, 106, 0.12), rgba(17, 19, 26, 0.78));
+    }
+
+    .problem-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .problem-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .no {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--panel-soft);
+      color: var(--accent);
+      border: 1px solid var(--line);
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .title {
+      font-size: 18px;
+      letter-spacing: -0.02em;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: var(--sub);
+      font-size: 13px;
+    }
+
+    .problem-score {
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #cfc5ff;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .section-box {
+      margin-top: 12px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(23, 25, 35, 0.76);
+    }
+
+    .section-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 9px;
+      color: var(--warning);
+      font-size: 13px;
+      letter-spacing: -0.01em;
+    }
+
+    .section-content {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.78;
+      white-space: pre-line;
+    }
+
+    .criteria-list {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .criterion {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 82px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      border-radius: 14px;
+      cursor: pointer;
+      user-select: none;
+      transition: 0.18s ease;
+    }
+
+    .criterion:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .criterion.checked {
+      border-color: rgba(53, 196, 106, 0.7);
+      background: rgba(53, 196, 106, 0.12);
+    }
+
+    .criterion input { display: none; }
+
+    .criterion-main {
+      display: grid;
+      gap: 7px;
+    }
+
+    .criterion-text {
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--text);
+    }
+
+    .criterion-point {
+      color: var(--sub);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .criterion-tier {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      margin-right: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    .tier-required { background: rgba(53, 196, 106, 0.18); color: #6dd99e; }
+    .tier-mid      { background: rgba(255, 204, 102, 0.18); color: #ffcc66; }
+    .tier-hard     { background: rgba(255, 110, 110, 0.18); color: #ff8a8a; }
+
+    .tier-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .tier-cell {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(23, 25, 35, 0.6);
+    }
+
+    .tier-cell .tier-label { font-size: 12px; color: var(--sub); margin-bottom: 4px; }
+    .tier-cell .tier-value { font-size: 16px; }
+
+    .custom-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      background: #10121a;
+      margin-top: 2px;
+    }
+
+    .criterion input:checked + .custom-check {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .criterion input:checked + .custom-check::after {
+      content: "✓";
+      color: #07140c;
+      font-size: 15px;
+    }
+
+    .result {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(17, 19, 26, 0.78);
+      color: var(--sub);
+      line-height: 1.7;
+    }
+
+    .result span { color: var(--text); }
+
+    @media print {
+      body { background: #fff; color: #111; padding: 20px; }
+      .score-card, .toolbar, .problem-card, .criterion, .result, .section-box, .meta-item {
+        background: #fff;
+        border-color: #ccc;
+        box-shadow: none;
+      }
+      .desc, .subtitle, .score-label, .criterion-point, .result, .meta-label { color: #333; }
+      .section-title { color: #111; }
+      button { display: none; }
+    }
+
+    @media (max-width: 1080px) {
+      .criteria-list { grid-template-columns: repeat(2, 1fr); }
+      .meta-box { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 680px) {
+      .header { flex-direction: column; align-items: stretch; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .student-input { max-width: none; }
+      .btns { justify-content: stretch; }
+      button { flex: 1; }
+      .problem-top { flex-direction: column; }
+      .criteria-list { grid-template-columns: 1fr; }
+      .meta-box { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap" id="captureArea">
+    <section class="header">
+      <div>
+        <div class="eyebrow">Unity XR · Practical Evaluation</div>
+        <h1>게임플랫폼 응용 프로그래밍 능력단위 평가표<span class="badge">VR 인터랙션 / 핸드포즈 평가</span></h1>
+        <p class="desc">컨트롤러 모델 추적, 컨트롤러로 물체 잡기, 손 모델·그립 애니메이션, 핸드포즈 녹화·적용, 양손 잡기 능력을 평가합니다. (Sol_01 ~ Sol_05)</p>
+      </div>
+      <div class="score-card">
+        <div class="score-label">현재 점수</div>
+        <div class="score"><span id="score">0</span> / 100</div>
+      </div>
+    </section>
+
+    <section class="meta-box">
+      <div class="meta-item">
+        <div class="meta-label">능력단위</div>
+        <div class="meta-value">게임플랫폼 응용 프로그래밍</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">평가 방식</div>
+        <div class="meta-value">Unity XR 씬별 실습 결과물 평가</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">총점</div>
+        <div class="meta-value">100점</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">배점 (난이도별)</div>
+        <div class="meta-value">필수 60점 · 중급 +20점 · 고급 +20점</div>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <input id="studentName" class="student-input" type="text" placeholder="학생 이름 입력" />
+      <div class="btns">
+        <button onclick="checkAll()">전체 체크</button>
+        <button onclick="resetAll()">초기화</button>
+        <button onclick="exportPNG()">PNG 저장</button>
+        <button onclick="exportMD()">MD 저장</button>
+        <button onclick="window.print()">인쇄</button>
+      </div>
+    </section>
+
+    <section class="grid" id="problemList"></section>
+
+    <section class="result">
+      학생명: <span id="resultName">미입력</span><br />
+      체크한 평가 요소: <span id="doneCount">0</span> / 20<br />
+      총점: <span id="resultScore">0</span>점
+
+      <div class="tier-summary">
+        <div class="tier-cell">
+          <div class="tier-label">필수 (누구나)</div>
+          <div class="tier-value"><span id="tierRequiredScore">0</span> / 60점</div>
+        </div>
+        <div class="tier-cell">
+          <div class="tier-label">중급</div>
+          <div class="tier-value"><span id="tierMidScore">0</span> / 20점</div>
+        </div>
+        <div class="tier-cell">
+          <div class="tier-label">고급</div>
+          <div class="tier-value"><span id="tierHardScore">0</span> / 20점</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const TIER = {
+      required: { label: "필수", className: "tier-required", points: 6 },
+      mid:      { label: "중급", className: "tier-mid",      points: 4 },
+      hard:     { label: "고급", className: "tier-hard",     points: 4 }
+    };
+
+    const problems = [
+      {
+        no: "문1",
+        title: "컨트롤러 모델 추적 (Sol_01)",
+        problem: "새 씬을 만들어 왼손·오른손 컨트롤러 모델이 실제 기기의 컨트롤러 움직임에 따라 함께 움직이도록 구현하시오.",
+        description: "씬: Sol_01\n\n메인 카메라를 삭제하고 XR Origin (VR)을 생성한 뒤 위치를 초기화하고 Camera Y Offset을 0으로 설정합니다.\n\nXR Origin 아래에 Left Controller / Right Controller 빈 오브젝트를 만들고, 각각 자식으로 Visuals를 만들어 Project의 'xr controller left' / 'xr controller right' 모델을 넣고 위치를 초기화합니다.\n\nLeft/Right Controller에 Tracked Pose Driver (Input System)를 부착하고, Tools > VR > Tracked Pose Driver Setup의 'Add & Assign Tracked Pose Driver'로 Position/Rotation/Tracking State Input을 자동 할당합니다.\n\n실행 후 실제 컨트롤러를 움직이면 좌·우 컨트롤러 모델이 함께 움직여야 합니다.",
+        criteria: [
+          { tier: "required", text: "XR Origin (VR) 구성\n메인 카메라 삭제 · XR Origin (VR) 생성 · 위치 초기화 · Camera Y Offset 0 · Camera Offset 초기화" },
+          { tier: "required", text: "컨트롤러 비주얼 배치\nLeft/Right Controller > Visuals 에 xr controller left/right 모델 배치 후 위치 초기화" },
+          { tier: "mid",      text: "Tracked Pose Driver 부착·할당\nTracked Pose Driver(Input System) 부착 + Tools>VR>Setup의 Add & Assign 실행, Position/Rotation/Tracking State Input 채워짐" },
+          { tier: "hard",     text: "좌·우 추적 동작\n실행 시 왼손·오른손 컨트롤러 모델이 실제 기기 움직임을 따라 정확히 함께 움직임" }
+        ]
+      },
+      {
+        no: "문2",
+        title: "컨트롤러로 물체 잡기 (Sol_02)",
+        problem: "Sol_01을 복사한 Sol_02 씬에서 Near-Far Interactor와 XR Grab Interactable로 컨트롤러로 큐브를 잡을 수 있도록 구현하시오.",
+        description: "씬: Sol_02 (Sol_01 복사)\n\nProject에서 'near' 검색으로 Left_NearFarInteractor / Right_NearFarInteractor를 각 컨트롤러의 자식으로 넣고 위치를 초기화합니다.\n\n잡을 물체 Cube를 (0, 1.1, 0.5)에 만들고, 자식으로 Visuals>Mesh(3D Cube, Box Collider 제거)와 Col(Box Collider)을 구성한 뒤 최상위 Cube의 Scale을 0.1로 설정합니다.\n\nCube에 XR Grab Interactable을 부착하면 Rigidbody가 자동 추가되며, Use Gravity와 Throw On Detach를 체크 해제합니다.\n\n실행 후 왼손·오른손으로 큐브를 잡을 수 있어야 합니다.",
+        criteria: [
+          { tier: "required", text: "Near-Far Interactor 배치\nLeft/Right_NearFarInteractor를 각 컨트롤러 자식으로 넣고 위치 초기화" },
+          { tier: "required", text: "Cube 구조 구성\nCube(0,1.1,0.5) · Visuals/Mesh(Box Collider 제거) · Col(Box Collider) · 최상위 Scale 0.1" },
+          { tier: "mid",      text: "XR Grab Interactable 설정\nCube에 XR Grab Interactable 부착 + Rigidbody Use Gravity 해제 + Throw On Detach 해제" },
+          { tier: "hard",     text: "양손 잡기 동작\n실행 시 왼손·오른손 양쪽으로 큐브를 잡을 수 있음" }
+        ]
+      },
+      {
+        no: "문3",
+        title: "손 모델 + 그립 애니메이션 (Sol_03)",
+        problem: "Sol_03 씬에서 컨트롤러 모델을 손 모델로 교체하고, 그립 버튼을 누르면 손이 쥐는 애니메이션이 동작하도록 구현하시오.",
+        description: "씬: Sol_03 (Sol_02 복사)\n\nVisuals의 XR Controller 모델을 제거하고, XR Hands > HandVisualizer > Models의 LeftHand / RightHand를 배치한 뒤 위치를 초기화하고 VR Base Package의 HandGlow 머티리얼을 적용합니다.\n\n손 모델에 Hand 컴포넌트를 부착하고 Input Device Characteristics를 Controller + Left / Controller + Right로 설정합니다.\n\nAnimator를 부착하고 Controller에 XRHand_L / XRHand_R를 할당하여, 그립 버튼 입력 시 손 쥐기 애니메이션이 동작하게 합니다.\n\n손 각도가 맞지 않으면 실행 중 Rotation을 보정한 뒤 Transform을 Copy Component → 정지 → Paste로 적용합니다. (왼손·오른손 모두)",
+        criteria: [
+          { tier: "required", text: "손 모델 교체 + 머티리얼\nXR Controller 모델 제거 → Left/RightHand 배치·위치 초기화 → HandGlow 머티리얼 적용" },
+          { tier: "required", text: "Hand 컴포넌트 설정\nHand 컴포넌트 부착 + Input Device Characteristics (Controller + Left / Right)" },
+          { tier: "mid",      text: "Animator 연결\nAnimator 부착 + XRHand_L/R 컨트롤러 할당, 그립 버튼에 손 쥐기 애니메이션 동작" },
+          { tier: "hard",     text: "손 각도 보정\n실행 중 Rotation 보정 → Transform Copy Component → 정지 후 Paste, 올바른 각도로 큐브 잡기 (좌·우)" }
+        ]
+      },
+      {
+        no: "문4",
+        title: "핸드포즈 녹화 & 그립 포즈 적용 (Sol_04)",
+        problem: "Sol_04 씬에서 핸드트래킹으로 큐브 잡는 손모양을 스냅샷하고, 그 포즈를 컨트롤러 잡기에 적용하시오.",
+        description: "씬: Sol_04 (Sol_03 복사)\n\nHandVisualizer 씬의 Hand Visualizer 컴포넌트를 복사해 Sol_04의 XR Origin 하위 빈 오브젝트에 붙여넣고 Hand Processor를 부착하여 핸드트래킹을 동작시킵니다.\n\nTools > Hand Pose Recorder에서 Attach Target에 Cube, Ghost Hand Model에 LeftHand 프리팹을 할당하고, 핸드트래킹으로 잡는 포즈를 연출한 뒤 'Attach To Target'으로 스냅샷합니다. (스냅샷은 Assets/HandPoses/Prefabs에 저장)\n\n주의: 최상위 Cube의 Scale은 (1,1,1)이어야 하며 Mesh/Col만 0.1로 만들어야 합니다.\n\n스냅샷 프리팹을 Cube 자식으로 넣고, Controller Grab Hand Pose 부착, Cube 컴포넌트의 Cube Data에 HandPose_Snapshot(SO)을 할당합니다.\n\nTools > VR > Create Grab Attach로 GrabAttach(Ghost Wrist)를 만들어 XR Grab Interactable의 Attach Transform에 연결하고, Align Interactor Attach로 InteractorAttach(Wrist)를 생성합니다. 컨트롤러로 잡으면 스냅샷한 손모양으로 잡혀야 합니다.",
+        criteria: [
+          { tier: "required", text: "Hand Visualizer 구성\nHand Visualizer 컴포넌트 복사-붙여넣기 + Hand Processor 부착, 핸드트래킹 정상 동작" },
+          { tier: "required", text: "핸드포즈 스냅샷 (크기 규칙 준수)\nHand Pose Recorder로 Attach To Target 스냅샷 + 최상위 Cube Scale (1,1,1)·Mesh/Col 0.1 규칙 준수" },
+          { tier: "mid",      text: "그립 포즈 컴포넌트 연결\n스냅샷 프리팹 Cube 자식 배치 + Controller Grab Hand Pose 부착 + Cube 컴포넌트 Cube Data 할당" },
+          { tier: "hard",     text: "Grab / Interactor Attach 정렬\nCreate Grab Attach(Ghost Wrist)→Attach Transform + Align Interactor Attach(Wrist), 컨트롤러로 잡으면 스냅샷 손모양으로 잡힘" }
+        ]
+      },
+      {
+        no: "문5",
+        title: "양손으로 실린더 잡기 (Sol_05)",
+        problem: "Sol_05 씬에서 실린더를 양손(왼손·오른손)으로 잡을 수 있도록 구현하시오. 잡는 순서와 무관하게 각 손이 고스트 핸드 위치(스냅샷 포즈)에 잡혀야 합니다.",
+        description: "씬: Sol_05 (Sol_04 복사)\n\nCube를 삭제하고 Cylinder(0,1.1,0.5)를 만들어 Visuals>Mesh(3D Cylinder, Scale 0.1/0.3/0.1, Collider 제거)를 구성합니다. Col에 Capsule Collider(Radius 0.05, Height 0.2)를 만들고 Col_L(위)/Col_R(아래) 두 개를 배치합니다.\n\nHand Visualizer로 좌·우 핸드포즈를 각각 녹화합니다. (Hand Name을 좌/우로 구분, Ghost Hand Model은 LeftHand/RightHand) 스냅샷된 고스트 핸드를 실린더에 넣습니다.\n\nXR Grab Interactable 부착(Use Gravity·Throw On Detach 해제) 후 Select Mode를 Multiple로 변경하고, Attach Transform / Secondary Attach Transform에 좌·우 Grab Attach(Ghost Wrist)를 각각 할당합니다. Align Interactor Attach / Create Grab Attach는 좌·우 모두 수행합니다.\n\nCube 컴포넌트와 같은 방식으로 포즈 2개(Left/Right)를 보유하는 Cylinder 컴포넌트를 작성해 부착합니다(HandPose_Snapshot_Left / _Right). 잡는 순간 컨트롤러 모델은 고정되고 고스트 핸드는 비활성화되어야 합니다.",
+        criteria: [
+          { tier: "required", text: "실린더 구조 구성\nCylinder(0,1.1,0.5) · Mesh(0.1/0.3/0.1) · Col_L/Col_R Capsule(R0.05·H0.2) 위·아래 배치" },
+          { tier: "required", text: "좌·우 핸드포즈 녹화\nHand Name 구분해 HandPose_Snapshot_Left/Right 스냅샷, 고스트 핸드를 실린더에 배치" },
+          { tier: "mid",      text: "다중(Multiple) 잡기 설정\nSelect Mode Multiple + Attach/Secondary Attach Transform에 좌·우 Grab Attach 할당 + Interactor/Grab Attach 좌·우 생성" },
+          { tier: "hard",     text: "Cylinder 컴포넌트 + 양손 검증\n포즈 2개(Left/Right) 보유 Cylinder 컴포넌트 작성, 잡으면 컨트롤러 모델 고정·고스트 비활성, 좌→우 / 우→좌 순서 모두 고스트 위치에 잡힘" }
+        ]
+      }
+    ];
+
+    const list = document.getElementById("problemList");
+
+    problems.forEach((problem, problemIndex) => {
+      const card = document.createElement("article");
+      card.className = "problem-card";
+
+      const criteriaHtml = problem.criteria.map((criterion, criteriaIndex) => {
+        const tierInfo = TIER[criterion.tier];
+        const parts = criterion.text.split("\n");
+        const title = parts[0] || criterion.text;
+        const detail = parts.slice(1).join("\n");
+        return `
+          <label class="criterion">
+            <span class="criterion-main">
+              <span class="criterion-text"><span class="criterion-tier ${tierInfo.className}">${tierInfo.label}</span>${title}${detail ? "<br><span style='color: var(--sub); font-size: 13px;'>" + detail + "</span>" : ""}</span>
+              <span class="criterion-point">${tierInfo.points}점</span>
+            </span>
+            <input type="checkbox" class="criterion-check" data-problem="${problemIndex}" data-criteria="${criteriaIndex}" data-tier="${criterion.tier}" data-points="${tierInfo.points}" />
+            <span class="custom-check"></span>
+          </label>
+        `;
+      }).join("");
+
+      card.innerHTML = `
+        <div class="problem-top">
+          <div class="problem-title-row">
+            <div class="no">${problem.no}</div>
+            <div>
+              <div class="title">${problem.title}</div>
+              <div class="subtitle">문항별 20점 · 필수 12 + 중급 4 + 고급 4</div>
+            </div>
+          </div>
+          <div class="problem-score"><span class="problem-score-value">0</span> / 20점</div>
+        </div>
+
+        <div class="section-box">
+          <div class="section-title">문제</div>
+          <div class="section-content">${problem.problem}</div>
+        </div>
+
+        <div class="section-box">
+          <div class="section-title">설명</div>
+          <div class="section-content">${problem.description}</div>
+        </div>
+
+        <div class="section-box">
+          <div class="section-title">채점기준</div>
+          <div class="criteria-list">
+            ${criteriaHtml}
+          </div>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+
+    const checks = document.querySelectorAll(".criterion-check");
+    const studentName = document.getElementById("studentName");
+
+    checks.forEach(check => {
+      check.addEventListener("change", updateScore);
+    });
+
+    studentName.addEventListener("input", updateScore);
+
+    function updateScore() {
+      let total = 0;
+      let done = 0;
+      const problemScores = Array(problems.length).fill(0);
+      const tierScores = { required: 0, mid: 0, hard: 0 };
+
+      checks.forEach(check => {
+        const label = check.closest(".criterion");
+        const problemIndex = Number(check.dataset.problem);
+        const points = Number(check.dataset.points);
+        const tier = check.dataset.tier;
+
+        if (check.checked) {
+          total += points;
+          done++;
+          problemScores[problemIndex] += points;
+          tierScores[tier] += points;
+          label.classList.add("checked");
+        } else {
+          label.classList.remove("checked");
+        }
+      });
+
+      document.querySelectorAll(".problem-card").forEach((card, index) => {
+        card.querySelector(".problem-score-value").textContent = problemScores[index];
+        card.classList.toggle("full", problemScores[index] === 20);
+      });
+
+      document.getElementById("score").textContent = total;
+      document.getElementById("resultScore").textContent = total;
+      document.getElementById("doneCount").textContent = done;
+      document.getElementById("resultName").textContent = studentName.value.trim() || "미입력";
+      document.getElementById("tierRequiredScore").textContent = tierScores.required;
+      document.getElementById("tierMidScore").textContent = tierScores.mid;
+      document.getElementById("tierHardScore").textContent = tierScores.hard;
+    }
+
+    function checkAll() {
+      checks.forEach(check => check.checked = true);
+      updateScore();
+    }
+
+    function resetAll() {
+      checks.forEach(check => check.checked = false);
+      studentName.value = "";
+      updateScore();
+    }
+
+    function exportPNG() {
+      const target = document.getElementById("captureArea");
+      const name = studentName.value.trim() || "미입력";
+      const fileName = `게임플랫폼_응용_프로그래밍_능력단위_평가표_${name}.png`;
+
+      html2canvas(target, {
+        scale: 2,
+        backgroundColor: "#08090d",
+        useCORS: true
+      }).then(canvas => {
+        const link = document.createElement("a");
+        link.download = fileName;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+    }
+
+    function exportMD() {
+      const name = studentName.value.trim() || "미입력";
+
+      let total = 0;
+      let done = 0;
+      const problemScores = Array(problems.length).fill(0);
+      const tierScores = { required: 0, mid: 0, hard: 0 };
+      const checkStates = {};
+
+      checks.forEach(check => {
+        const problemIndex = Number(check.dataset.problem);
+        const criteriaIndex = Number(check.dataset.criteria);
+        const points = Number(check.dataset.points);
+        const tier = check.dataset.tier;
+        const key = `${problemIndex}-${criteriaIndex}`;
+        checkStates[key] = check.checked;
+        if (check.checked) {
+          total += points;
+          done++;
+          problemScores[problemIndex] += points;
+          tierScores[tier] += points;
+        }
+      });
+
+      const lines = [];
+      lines.push("# 게임플랫폼 응용 프로그래밍 능력단위 평가표");
+      lines.push("");
+      lines.push(`- **학생명**: ${name}`);
+      lines.push(`- **총점**: ${total} / 100점`);
+      lines.push(`- **체크된 평가 요소**: ${done} / 20`);
+      lines.push("");
+      lines.push("## Tier 별 점수");
+      lines.push("");
+      lines.push("| Tier | 점수 | 비고 |");
+      lines.push("|---|---|---|");
+      lines.push(`| 🟢 필수 (누구나) | ${tierScores.required} / 60점 | 씬 구성·필드 연결 |`);
+      lines.push(`| 🟡 중급 | ${tierScores.mid} / 20점 | 컴포넌트 설정 |`);
+      lines.push(`| 🔴 고급 | ${tierScores.hard} / 20점 | 동작·핵심 구현 |`);
+      lines.push("");
+
+      problems.forEach((problem, pIdx) => {
+        lines.push(`## ${problem.no}. ${problem.title}`);
+        lines.push("");
+        lines.push(`**점수**: ${problemScores[pIdx]} / 20점`);
+        lines.push("");
+        problem.criteria.forEach((criterion, cIdx) => {
+          const tierInfo = TIER[criterion.tier];
+          const key = `${pIdx}-${cIdx}`;
+          const mark = checkStates[key] ? "x" : " ";
+          const title = criterion.text.split("\n")[0];
+          const detail = criterion.text.split("\n").slice(1).join(" ");
+          lines.push(`- [${mark}] **[${tierInfo.label} ${tierInfo.points}점]** ${title}`);
+          if (detail) lines.push(`  - ${detail}`);
+        });
+        lines.push("");
+      });
+
+      lines.push("---");
+      lines.push(`*평가표 생성일: ${new Date().toLocaleString("ko-KR")}*`);
+
+      const md = lines.join("\n");
+      const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.download = `게임플랫폼_응용_프로그래밍_능력단위_평가표_${name}.md`;
+      link.href = url;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
